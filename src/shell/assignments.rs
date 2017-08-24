@@ -1,6 +1,8 @@
 use std::env;
 use std::io::{self, Write};
 
+use smallstring::SmallString;
+use super::history::ShellHistory;
 use super::Shell;
 use super::status::*;
 use parser::expand_string;
@@ -68,6 +70,14 @@ impl<'a> VariableStore for Shell<'a> {
                         Ok(Action::UpdateArray(key, Operator::Equal, expression)) => {
                             // TODO: Handle different array types accordingly.
                             let value = expand_string(expression, self, false);
+                            // When we changed the HISTORY_IGNORE variable, update the ignore
+                            // patterns. This happens first because `set_array` consumes 'value'
+                            // We need to use a temporary variable here as the compiler doesn't
+                            // like it if we write "if key == TypeArg { ... }"
+                            let tmp = TypeArg { name: "HISTORY_IGNORE", kind: TypePrimitive::Any};
+                            if key == tmp {
+                                self.update_ignore_patterns(&value);
+                            }
                             self.variables.set_array(key.name, value);
                         }
                         Ok(Action::UpdateArray(..)) => {
