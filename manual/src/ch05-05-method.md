@@ -3,7 +3,7 @@
 There are two forms of methods within Ion: array and string methods. Array methods are methods which return arrays,
 and string methods are methods which return strings. Invoking an array method requires denoting that the method
 is an array method with the '@' character, whereas using '$' for string methods -- same as process and variable
-expansions. The general syntax of a method is '<sigil><name_of_method>(<input>, <arg1> <arg2> <args>...)'.
+expansions. The general syntax of a method is `<sigil><name_of_method>(<input>, <arg1> <arg2> <args>...)`.
 
 Methods are executed at the same time as other expansions, so this leads to a performance optimization when combining
 methods with other methods or expansions. Ion includes a number of these methods for common use cases, but it is
